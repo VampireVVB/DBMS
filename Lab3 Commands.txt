@@ -1,0 +1,106 @@
+//TABLE CREATION
+
+create table person(
+driver_id varchar(30) primary key,
+name varchar(30) not null,
+address varchar(30));
+
+
+create table car(
+regno varchar(20) primary key,
+model varchar(30) not null,
+year int);
+
+
+create table accident(
+report_number int primary key,
+accd_date date,
+location varchar(30));
+
+
+create table owns(
+driver_id varchar(30) references person on delete cascade,
+regno varchar(20) references car on delete cascade);
+
+
+create table participated(
+driver_id varchar(30) references person on delete cascade,
+regno varchar(30) references car on delete cascade,
+report_number int references accident on delete cascade,
+damage_amount int);
+
+
+//TABLE INSERTION
+
+insert into person values('UK07-0987','Rishabh','Dehradun');
+insert into person values('UP15-3849','Nilansha','Noida');
+insert into person values('HP44-4732','Shaurya','Dehradun');
+insert into person values('PB35-7744','Himanshu','Pathankot');
+insert into person values('RJ33-9832','Jaiveer','Jaipur');
+insert into person values('MH12-0000','Mukesh','Mumbai');
+
+insert into car values('N1','Manza',2009);
+insert into car values('N2','Swift',2010);
+insert into car values('N3','Scorpio',2012);
+insert into car values('N4','Maruti',2012);
+insert into car values('N5','Polo',2014);
+insert into car values('N6','Creta',2015);
+insert into car values('N7','Indigo',2018);
+insert into car values('N8','Rolls Royce',2020);
+insert into car values('N9','Tesla',2022);
+
+insert into accident values(12,to_date('2010-12-01','yyyy-mm-dd'),'Udupi');
+insert into accident values(105,to_date('2012-01-25','yyyy-mm-dd'),'Noida');
+insert into accident values(107,to_date('2013-03-13','yyyy-mm-dd'),'Dehradun');
+insert into accident values(118,to_date('2014-06-29','yyyy-mm-dd'),'Mumbai');
+insert into accident values(123,to_date('2016-02-06','yyyy-mm-dd'),'Jaipur');
+insert into accident values(120,to_date('2020-03-18','yyyy-mm-dd'),'Meerut');
+insert into accident values(129,to_date('2020-03-18','yyyy-mm-dd'),'Mumbai');
+insert into accident values(144,to_date('2022-09-05','yyyy-mm-dd'),'Delhi');
+insert into accident values(145,to_date('2022-11-21','yyyy-mm-dd'),'Udupi');
+
+insert into owns values('UK07-0987','N1');
+insert into owns values('UP15-3849','N2');
+insert into owns values('HP44-4732','N3');
+insert into owns values('PB35-7744','N4');
+insert into owns values('MH12-0000','N5');
+insert into owns values('UK07-0987','N6');
+insert into owns values('UP15-3849','N7');
+insert into owns values('MH12-0000','N8');
+insert into owns values('UK07-0987','N9');
+
+insert into participated values('UK07-0987','N1',12,6000);
+insert into participated values('UP15-3849','N2',105,8000);
+insert into participated values('HP44-4732','N3',107,10000);
+insert into participated values('MH12-0000','N5',118,20000);
+insert into participated values('RJ33-9832','N6',123,25000);
+insert into participated values('UP15-3849','N7',120,48000);
+insert into participated values('MH12-0000','N8',129,60000);
+insert into participated values('UK07-0987','N9',144,50000);
+insert into participated values('UK07-0987','N1',145,100000);
+
+// QUESTION_3
+update participated
+set damage_amount=25000
+where report_number=12 and regno='N1';
+
+
+// QUESTION_4
+delete from participated
+where report_number = (
+select report_number
+from accident
+where extract(year from accd_date) = 2014);
+
+
+// QUESTION_5
+alter table owns
+add purchase_id varchar(30);
+
+alter table owns
+drop column purchase_id;
+
+
+// QUESTION_6
+alter table participated
+add check(damage_amount>0);
